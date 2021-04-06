@@ -18,12 +18,25 @@ package com.example.androiddevchallenge
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.ConstraintSet
 import com.example.androiddevchallenge.ui.theme.MyTheme
+import com.example.androiddevchallenge.ui.theme.pink100
+import java.nio.file.WatchEvent
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,8 +52,29 @@ class MainActivity : AppCompatActivity() {
 // Start building your app here!
 @Composable
 fun MyApp() {
-    Surface(color = MaterialTheme.colors.background) {
-        Text(text = "Ready... Set... GO!")
+    ConstraintLayout(
+        modifier = Modifier
+            .background(color = MaterialTheme.colors.primary)
+    ) {
+        val (backgroundImage, titleHeader) = createRefs()
+        Image(
+            painter = painterResource(id = R.drawable.ic_light_welcome_bg),
+            contentDescription = null,
+            contentScale = ContentScale.FillBounds,
+            modifier = Modifier.constrainAs(backgroundImage) {
+                bottom.linkTo(parent.bottom)
+                end.linkTo(parent.end)
+            }
+        )
+
+        Text("Bloom",
+            color = MaterialTheme.colors.secondary,
+            modifier = Modifier
+                .constrainAs(titleHeader) {
+                    centerVerticallyTo(parent)
+                    centerHorizontallyTo(parent)
+                }
+        )
     }
 }
 
