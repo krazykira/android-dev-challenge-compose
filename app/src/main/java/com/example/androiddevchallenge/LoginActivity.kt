@@ -128,7 +128,7 @@ fun LoginPage() {
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 }
-                .padding(start = 24.dp, end = 24.dp, top = 8.dp)
+                .padding(start = 24.dp, end = 24.dp)
 
         ) {
             Text("Log in", color = MaterialTheme.colors.onSecondary, fontWeight = FontWeight.Normal)
