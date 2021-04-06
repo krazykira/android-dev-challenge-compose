@@ -15,7 +15,10 @@
  */
 package com.example.androiddevchallenge
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.view.Window
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.Image
@@ -23,30 +26,52 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.ConstraintSet
 import com.example.androiddevchallenge.ui.theme.MyTheme
-import com.example.androiddevchallenge.ui.theme.shapes
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MyTheme {
+                SystemUi(window)
                 MyApp()
             }
         }
+    }
+}
+
+@Composable
+fun SystemUi(windows: Window) {
+    windows.statusBarColor = MaterialTheme.colors.surface.toArgb()
+    windows.navigationBarColor = MaterialTheme.colors.surface.toArgb()
+
+    @Suppress("DEPRECATION")
+    if (MaterialTheme.colors.surface.luminance() > 0.5f) {
+        windows.decorView.systemUiVisibility = windows.decorView.systemUiVisibility or
+                View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+    }
+
+    @Suppress("DEPRECATION")
+    if (MaterialTheme.colors.surface.luminance() > 0.5f) {
+        windows.decorView.systemUiVisibility = windows.decorView.systemUiVisibility or
+                View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
     }
 }
 
@@ -86,8 +111,8 @@ fun MyApp(darkTheme: Boolean = isSystemInDarkTheme()) {
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .constrainAs(leaf) {
-                    top.linkTo(parent.top, margin = 72.dp)
-                    start.linkTo(parent.start, margin = 88.dp)
+                    top.linkTo(parent.top, margin = 152.dp)
+                    start.linkTo(parent.start, margin = 110.dp)
                 }
         )
 
@@ -132,17 +157,23 @@ fun MyApp(darkTheme: Boolean = isSystemInDarkTheme()) {
             Text("Create Account", color = MaterialTheme.colors.onSecondary)
         }
 
-        Text("Login", color = textColor,
+        val context = LocalContext.current
+        ClickableText(
+            text = AnnotatedString("Login"), style = TextStyle(color = textColor),
             modifier = Modifier
                 .constrainAs(loginButton) {
                     top.linkTo(createAccountButton.bottom, 8.dp)
                     centerHorizontallyTo(parent)
-                }
+                },
+            onClick = {
+                val intent = Intent(context, LoginActivity::class.java)
+                context.startActivity(intent)
+            }
         )
     }
 }
 
-@Preview("Light Theme", widthDp = 360, heightDp = 640)
+@Preview("Light Theme")
 @Composable
 fun LightPreview() {
     MyTheme {
@@ -150,7 +181,7 @@ fun LightPreview() {
     }
 }
 
-@Preview("Dark Theme", widthDp = 360, heightDp = 640)
+@Preview("Dark Theme")
 @Composable
 fun DarkPreview() {
     MyTheme(darkTheme = true) {
